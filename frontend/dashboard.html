@@ -1,6 +1,11 @@
-<h1>Dashboard</h1>
+<link rel="stylesheet" href="style.css">
+
+<div class="dashboard">
+  <h1>Dashboard</h1>
+  <h3 id="user"></h3>
+</div>
 
 <script>
   const user = JSON.parse(localStorage.getItem("user"));
-  document.write("Welcome " + user.username);
+  document.getElementById("user").innerText = "Welcome " + user.username;
 </script>
