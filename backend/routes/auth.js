@@ -2,12 +2,19 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 const router = express.Router();
 
 // SIGNUP
 router.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
+
+  // ✅ Email validation
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format ❌" });
+  }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -24,25 +31,26 @@ router.post("/signup", async (req, res) => {
 
   await user.save();
 
-  res.json({ message: "Signup successful" });
+  res.json({ message: "Signup successful ✅" });
 });
 
 // LOGIN
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "All fields required" });
+  // ✅ Email validation
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: "Invalid email format ❌" });
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(400).json({ message: "User not found" });
+    return res.status(400).json({ message: "User not found ❌" });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid password" });
+    return res.status(400).json({ message: "Invalid password ❌" });
   }
 
   const token = jwt.sign(
