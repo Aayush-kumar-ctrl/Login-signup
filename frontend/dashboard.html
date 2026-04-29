@@ -1,11 +1,15 @@
 <link rel="stylesheet" href="style.css">
 
-<div class="dashboard">
-  <h1>Dashboard</h1>
-  <h3 id="user"></h3>
+<div class="container">
+  <h2>Create Post</h2>
+
+  <textarea id="content" placeholder="What's on your mind?"></textarea>
+  <button onclick="createPost()">Post</button>
+
+  <hr>
+
+  <h3>Feed</h3>
+  <div id="feed"></div>
 </div>
 
-<script>
-  const user = JSON.parse(localStorage.getItem("user"));
-  document.getElementById("user").innerText = "Welcome " + user.username;
-</script>
+<script src="script.js"></script>

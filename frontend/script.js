@@ -1,4 +1,5 @@
 const API = "http://localhost:5000/api/auth";
+const POST_API = "http://localhost:5000/api/posts";
 
 // ---------------- SIGNUP ----------------
 function signup() {
@@ -49,4 +50,58 @@ function login() {
     window.location.href = "dashboard.html";
   })
   .catch(() => alert("Server error"));
+}
+
+// CREATE POST
+function createPost() {
+  const content = document.getElementById("content").value;
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  fetch(POST_API + "/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: user.email,
+      username: user.username,
+      content
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+    document.getElementById("content").value = "";
+    loadPosts();
+  });
+}
+
+// LOAD POSTS
+function loadPosts() {
+  fetch(POST_API + "/all")
+    .then(res => res.json())
+    .then(posts => {
+      const feed = document.getElementById("feed");
+      feed.innerHTML = "";
+
+      posts.forEach(post => {
+        feed.innerHTML += `
+          <div class="post">
+            <b>${post.username}</b>
+            <p>${post.content}</p>
+            <small>❤️ ${post.likes}</small>
+            <br>
+            <button onclick="likePost('${post._id}')">Like</button>
+          </div>
+        `;
+      });
+    });
+}
+
+// LIKE POST
+function likePost(id) {
+  fetch(POST_API + "/like/" + id, { method: "POST" })
+    .then(() => loadPosts());
+}
+
+// AUTO LOAD FEED
+if (window.location.pathname.includes("dashboard")) {
+  loadPosts();
 }
