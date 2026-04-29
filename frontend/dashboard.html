@@ -1,0 +1,23 @@
+<h1>Dashboard</h1>
+
+<h2 id="user"></h2>
+<p id="mail"></p>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user"));
+const token = localStorage.getItem("token");
+
+if (!token) {
+  window.location.href = "login.html";
+}
+
+document.getElementById("user").innerText = "Welcome " + user.username;
+document.getElementById("mail").innerText = user.email;
+
+function logout() {
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+</script>
