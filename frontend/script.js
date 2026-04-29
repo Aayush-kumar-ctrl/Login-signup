@@ -1,6 +1,6 @@
 const API = "http://localhost:5000/api/auth";
 
-// -------------------- SIGNUP --------------------
+// ---------------- SIGNUP ----------------
 function signup() {
   const username = document.getElementById("username").value;
   const email = document.getElementById("email").value;
@@ -11,27 +11,21 @@ function signup() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password })
   })
-  .then(async (res) => {
+  .then(async res => {
     const data = await res.json();
 
-    // ❌ ERROR CASE
     if (!res.ok) {
-      alert(data.message);   // show error (invalid email etc.)
-      return;                // 🔥 STOP HERE (no redirect)
+      alert(data.message);
+      return;
     }
 
-    // ✅ SUCCESS CASE
-    alert("Signup successful ✅");
+    alert("Signup successful");
     window.location.href = "login.html";
   })
-  .catch(err => {
-    alert("Server error ❌");
-    console.log(err);
-  });
+  .catch(() => alert("Server error"));
 }
 
-
-// -------------------- LOGIN --------------------
+// ---------------- LOGIN ----------------
 function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -41,23 +35,18 @@ function login() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   })
-  .then(async (res) => {
+  .then(async res => {
     const data = await res.json();
 
-    // ❌ ERROR CASE
     if (!res.ok) {
       alert(data.message);
       return;
     }
 
-    // ✅ SUCCESS CASE
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
     window.location.href = "dashboard.html";
   })
-  .catch(err => {
-    alert("Server error ❌");
-    console.log(err);
-  });
+  .catch(() => alert("Server error"));
 }
